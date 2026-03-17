@@ -257,6 +257,44 @@
             color: var(--red);
         }
 
+        /* Sorted Lines */
+        .lines-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 0.9rem;
+        }
+        .lines-row:last-child { border-bottom: none; }
+        .lines-rank {
+            min-width: 28px;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .lines-teams {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+        .lines-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .lines-region {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
         /* Rules */
         .rules-card {
             background: var(--card);
@@ -716,17 +754,21 @@
             const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
             const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
 
-            html += `<div class="matchup">
-                <span style="min-width:24px;color:var(--text-dim);font-size:0.75rem;font-weight:700">${idx + 1}.</span>
-                <span class="seed seed-${m.seed}">${m.seed}</span>
-                <span class="team-name">${m.team}</span>
-                ${used1 ? '<span class="team-used">USED</span>' : ''}
-                <span class="vs-label">vs</span>
-                <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
-                <span class="team-name">${m.vs_team}</span>
-                ${used2 ? '<span class="team-used">USED</span>' : ''}
-                <span class="${spreadClass}" title="Point spread">${favText}</span>
-                <span style="color:var(--text-dim);font-size:0.7rem;margin-left:0.5rem">${m.region}</span>
+            html += `<div class="lines-row">
+                <span class="lines-rank">${idx + 1}.</span>
+                <div class="lines-teams">
+                    <span class="seed seed-${m.seed}">${m.seed}</span>
+                    <span>${m.team}</span>
+                    ${used1 ? '<span class="team-used">USED</span>' : ''}
+                    <span class="vs-label">vs</span>
+                    <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
+                    <span>${m.vs_team}</span>
+                    ${used2 ? '<span class="team-used">USED</span>' : ''}
+                </div>
+                <div class="lines-meta">
+                    <span class="${spreadClass}" title="Point spread">${favText}</span>
+                    <span class="lines-region">${m.region}</span>
+                </div>
             </div>`;
         }
 
