@@ -242,6 +242,20 @@
             font-size: 0.75rem;
             margin: 0 0.5rem;
         }
+        .spread-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255,209,102,0.15);
+            color: var(--accent2);
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+        .spread-close {
+            background: rgba(239,71,111,0.15);
+            color: var(--red);
+        }
 
         /* Rules */
         .rules-card {
@@ -387,44 +401,44 @@
     <script>
     const BRACKET = {
         "East": [
-            { seed: 1, team: "Duke", record: "32-2", vs_seed: 16, vs_team: "Siena" },
-            { seed: 8, team: "Ohio State", vs_seed: 9, vs_team: "TCU" },
-            { seed: 5, team: "St. John's", vs_seed: 12, vs_team: "Northern Iowa" },
-            { seed: 4, team: "Kansas", vs_seed: 13, vs_team: "Cal Baptist" },
-            { seed: 6, team: "Louisville", vs_seed: 11, vs_team: "South Florida" },
-            { seed: 3, team: "Michigan State", vs_seed: 14, vs_team: "North Dakota St" },
-            { seed: 7, team: "UCLA", vs_seed: 10, vs_team: "UCF" },
-            { seed: 2, team: "UConn", record: "29-5", vs_seed: 15, vs_team: "Furman" }
+            { seed: 1, team: "Duke", record: "32-2", vs_seed: 16, vs_team: "Siena", spread: -27.5 },
+            { seed: 8, team: "Ohio State", vs_seed: 9, vs_team: "TCU", spread: -2.5 },
+            { seed: 5, team: "St. John's", vs_seed: 12, vs_team: "Northern Iowa", spread: -10.5 },
+            { seed: 4, team: "Kansas", vs_seed: 13, vs_team: "Cal Baptist", spread: -14.5 },
+            { seed: 6, team: "Louisville", vs_seed: 11, vs_team: "South Florida", spread: -7.5 },
+            { seed: 3, team: "Michigan State", vs_seed: 14, vs_team: "North Dakota St", spread: -16.5 },
+            { seed: 7, team: "UCLA", vs_seed: 10, vs_team: "UCF", spread: -3.5 },
+            { seed: 2, team: "UConn", record: "29-5", vs_seed: 15, vs_team: "Furman", spread: -19.5 }
         ],
         "West": [
-            { seed: 1, team: "Arizona", record: "32-2", vs_seed: 16, vs_team: "LIU" },
-            { seed: 8, team: "Villanova", vs_seed: 9, vs_team: "Utah State" },
-            { seed: 5, team: "Wisconsin", vs_seed: 12, vs_team: "High Point" },
-            { seed: 4, team: "Arkansas", vs_seed: 13, vs_team: "Hawaii" },
-            { seed: 6, team: "BYU", vs_seed: 11, vs_team: "Texas/NC State" },
-            { seed: 3, team: "Gonzaga", vs_seed: 14, vs_team: "Kennesaw State" },
-            { seed: 7, team: "Miami FL", vs_seed: 10, vs_team: "Missouri" },
-            { seed: 2, team: "Purdue", vs_seed: 15, vs_team: "Queens" }
+            { seed: 1, team: "Arizona", record: "32-2", vs_seed: 16, vs_team: "LIU", spread: -29.5 },
+            { seed: 8, team: "Villanova", vs_seed: 9, vs_team: "Utah State", spread: 1.5 },
+            { seed: 5, team: "Wisconsin", vs_seed: 12, vs_team: "High Point", spread: -12.5 },
+            { seed: 4, team: "Arkansas", vs_seed: 13, vs_team: "Hawaii", spread: -15.5 },
+            { seed: 6, team: "BYU", vs_seed: 11, vs_team: "Texas/NC State", spread: -5.5 },
+            { seed: 3, team: "Gonzaga", vs_seed: 14, vs_team: "Kennesaw State", spread: -18.5 },
+            { seed: 7, team: "Miami FL", vs_seed: 10, vs_team: "Missouri", spread: -1.5 },
+            { seed: 2, team: "Purdue", vs_seed: 15, vs_team: "Queens", spread: -23.5 }
         ],
         "Midwest": [
-            { seed: 1, team: "Michigan", record: "31-3", vs_seed: 16, vs_team: "UMBC/Howard" },
-            { seed: 8, team: "Georgia", vs_seed: 9, vs_team: "Saint Louis" },
-            { seed: 5, team: "Texas Tech", vs_seed: 12, vs_team: "Akron" },
-            { seed: 4, team: "Alabama", vs_seed: 13, vs_team: "Hofstra" },
-            { seed: 6, team: "Tennessee", vs_seed: 11, vs_team: "Miami OH/SMU" },
-            { seed: 3, team: "Virginia", record: "29-5", vs_seed: 14, vs_team: "Wright State" },
-            { seed: 7, team: "Kentucky", vs_seed: 10, vs_team: "Santa Clara" },
-            { seed: 2, team: "Iowa State", vs_seed: 15, vs_team: "Tennessee State" }
+            { seed: 1, team: "Michigan", record: "31-3", vs_seed: 16, vs_team: "UMBC/Howard", spread: -28.5 },
+            { seed: 8, team: "Georgia", vs_seed: 9, vs_team: "Saint Louis", spread: -2.5 },
+            { seed: 5, team: "Texas Tech", vs_seed: 12, vs_team: "Akron", spread: -8.5 },
+            { seed: 4, team: "Alabama", vs_seed: 13, vs_team: "Hofstra", spread: -12.5 },
+            { seed: 6, team: "Tennessee", vs_seed: 11, vs_team: "Miami OH/SMU", spread: -9.5 },
+            { seed: 3, team: "Virginia", record: "29-5", vs_seed: 14, vs_team: "Wright State", spread: -17.5 },
+            { seed: 7, team: "Kentucky", vs_seed: 10, vs_team: "Santa Clara", spread: -3.5 },
+            { seed: 2, team: "Iowa State", vs_seed: 15, vs_team: "Tennessee State", spread: -24.5 }
         ],
         "South": [
-            { seed: 1, team: "Florida", record: "26-7", vs_seed: 16, vs_team: "Pra. View/Lehigh" },
-            { seed: 8, team: "Clemson", vs_seed: 9, vs_team: "Iowa" },
-            { seed: 5, team: "Vanderbilt", vs_seed: 12, vs_team: "McNeese" },
-            { seed: 4, team: "Nebraska", vs_seed: 13, vs_team: "Troy" },
-            { seed: 6, team: "North Carolina", vs_seed: 11, vs_team: "VCU" },
-            { seed: 3, team: "Illinois", record: "24-8", vs_seed: 14, vs_team: "Penn" },
-            { seed: 7, team: "Saint Mary's", vs_seed: 10, vs_team: "Texas A&M" },
-            { seed: 2, team: "Houston", record: "28-6", vs_seed: 15, vs_team: "Idaho" }
+            { seed: 1, team: "Florida", record: "26-7", vs_seed: 16, vs_team: "Pra. View/Lehigh", spread: -27.5 },
+            { seed: 8, team: "Clemson", vs_seed: 9, vs_team: "Iowa", spread: -1.5 },
+            { seed: 5, team: "Vanderbilt", vs_seed: 12, vs_team: "McNeese", spread: -11.5 },
+            { seed: 4, team: "Nebraska", vs_seed: 13, vs_team: "Troy", spread: -13.5 },
+            { seed: 6, team: "North Carolina", vs_seed: 11, vs_team: "VCU", spread: -3 },
+            { seed: 3, team: "Illinois", record: "24-8", vs_seed: 14, vs_team: "Penn", spread: -17.5 },
+            { seed: 7, team: "Saint Mary's", vs_seed: 10, vs_team: "Texas A&M", spread: -2.5 },
+            { seed: 2, team: "Houston", record: "28-6", vs_seed: 15, vs_team: "Idaho", spread: -24.5 }
         ]
     };
 
@@ -643,14 +657,21 @@
             for (const m of matchups) {
                 const used1 = usedTeams.has(m.team);
                 const used2 = usedTeams.has(m.vs_team);
+                const spread = m.spread;
+                const spreadStr = spread < 0 ? spread.toString() : "+" + spread;
+                const isClose = Math.abs(spread) <= 5;
+                const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
+                // Favorite is the higher-seeded team (lower seed number) unless spread is positive (underdog)
+                const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
                 html += `<div class="matchup">
                     <span class="seed seed-${m.seed}">${m.seed}</span>
-                    <span class="team-name ${used1 ? '' : ''}">${m.team}${m.record ? ' <span style="color:var(--text-dim);font-size:0.8rem">(' + m.record + ')</span>' : ''}</span>
+                    <span class="team-name">${m.team}${m.record ? ' <span style="color:var(--text-dim);font-size:0.8rem">(' + m.record + ')</span>' : ''}</span>
                     ${used1 ? '<span class="team-used">USED</span>' : ''}
                     <span class="vs-label">vs</span>
                     <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
                     <span class="team-name">${m.vs_team}</span>
                     ${used2 ? '<span class="team-used">USED</span>' : ''}
+                    <span class="${spreadClass}" title="Point spread">${favText}</span>
                 </div>`;
             }
 
