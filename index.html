@@ -385,6 +385,7 @@
     <div class="tabs">
         <div class="tab active" data-tab="picks">My Picks</div>
         <div class="tab" data-tab="bracket">Bracket</div>
+        <div class="tab" data-tab="lines">Sorted Lines</div>
         <div class="tab" data-tab="rules">Rules</div>
     </div>
 
@@ -395,6 +396,7 @@
 
         <div id="tab-picks"></div>
         <div id="tab-bracket" style="display:none"></div>
+        <div id="tab-lines" style="display:none"></div>
         <div id="tab-rules" style="display:none"></div>
     </div>
 
@@ -681,6 +683,57 @@
         container.innerHTML = html;
     }
 
+    // Render Sorted Lines Tab
+    function renderSortedLines() {
+        const container = document.getElementById("tab-lines");
+        const usedTeams = getUsedTeams();
+
+        // Collect all matchups with region info
+        const allMatchups = [];
+        for (const [region, matchups] of Object.entries(BRACKET)) {
+            for (const m of matchups) {
+                allMatchups.push({ ...m, region });
+            }
+        }
+
+        // Sort by absolute spread descending (biggest lines first)
+        allMatchups.sort((a, b) => Math.abs(b.spread) - Math.abs(a.spread));
+
+        let html = `<div class="region-card">
+            <div class="region-header" style="cursor:default">
+                <h3>All Matchups by Spread</h3>
+                <span style="color:var(--text-dim);font-size:0.85rem">${allMatchups.length} games</span>
+            </div>
+            <div class="region-body">`;
+
+        for (let idx = 0; idx < allMatchups.length; idx++) {
+            const m = allMatchups[idx];
+            const used1 = usedTeams.has(m.team);
+            const used2 = usedTeams.has(m.vs_team);
+            const spread = m.spread;
+            const spreadStr = spread < 0 ? spread.toString() : "+" + spread;
+            const isClose = Math.abs(spread) <= 5;
+            const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
+            const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
+
+            html += `<div class="matchup">
+                <span style="min-width:24px;color:var(--text-dim);font-size:0.75rem;font-weight:700">${idx + 1}.</span>
+                <span class="seed seed-${m.seed}">${m.seed}</span>
+                <span class="team-name">${m.team}</span>
+                ${used1 ? '<span class="team-used">USED</span>' : ''}
+                <span class="vs-label">vs</span>
+                <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
+                <span class="team-name">${m.vs_team}</span>
+                ${used2 ? '<span class="team-used">USED</span>' : ''}
+                <span class="${spreadClass}" title="Point spread">${favText}</span>
+                <span style="color:var(--text-dim);font-size:0.7rem;margin-left:0.5rem">${m.region}</span>
+            </div>`;
+        }
+
+        html += `</div></div>`;
+        container.innerHTML = html;
+    }
+
     // Render Rules Tab
     function renderRules() {
         document.getElementById("tab-rules").innerHTML = `
@@ -722,6 +775,7 @@
         saveState();
         renderPicks();
         renderBracket();
+        renderSortedLines();
         updateStats();
     }
 
@@ -739,6 +793,7 @@
             saveState();
             renderPicks();
             renderBracket();
+            renderSortedLines();
             updateStats();
         }
     }
@@ -765,6 +820,7 @@
             const target = tab.dataset.tab;
             document.getElementById("tab-picks").style.display = target === "picks" ? "" : "none";
             document.getElementById("tab-bracket").style.display = target === "bracket" ? "" : "none";
+            document.getElementById("tab-lines").style.display = target === "lines" ? "" : "none";
             document.getElementById("tab-rules").style.display = target === "rules" ? "" : "none";
         });
     });
@@ -772,6 +828,7 @@
     // Init
     renderPicks();
     renderBracket();
+    renderSortedLines();
     renderRules();
     updateStats();
     </script>
