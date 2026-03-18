@@ -203,11 +203,31 @@
         .matchup {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 0.5rem 0;
             border-bottom: 1px solid rgba(255,255,255,0.03);
             font-size: 0.9rem;
+            gap: 0.5rem;
         }
         .matchup:last-child { border-bottom: none; }
+        .matchup-teams {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+            gap: 0;
+        }
+        .matchup-team {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            min-width: 0;
+        }
+        .matchup-team .team-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .seed {
             min-width: 28px;
             height: 28px;
@@ -218,13 +238,20 @@
             font-size: 0.75rem;
             font-weight: 800;
             margin-right: 0.5rem;
+            flex-shrink: 0;
         }
         .seed-1, .seed-2, .seed-3 { background: rgba(255,107,53,0.2); color: var(--accent); }
         .seed-4, .seed-5, .seed-6 { background: rgba(17,138,178,0.2); color: var(--blue); }
         .seed-7, .seed-8, .seed-9 { background: rgba(255,209,102,0.2); color: var(--accent2); }
         .seed-10, .seed-11, .seed-12 { background: rgba(136,153,170,0.15); color: var(--text-dim); }
         .seed-13, .seed-14, .seed-15, .seed-16 { background: rgba(136,153,170,0.08); color: var(--text-dim); }
-        .team-name { flex: 1; }
+        .team-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
         .team-used {
             font-size: 0.7rem;
             padding: 0.15rem 0.5rem;
@@ -251,6 +278,7 @@
             color: var(--accent2);
             white-space: nowrap;
             margin-left: 0.5rem;
+            flex-shrink: 0;
         }
         .spread-close {
             background: rgba(239,71,111,0.15);
@@ -400,6 +428,20 @@
             .stat-value { font-size: 1.3rem; }
             .container { padding: 0.75rem; }
             .pick-row { flex-wrap: wrap; }
+            .matchup {
+                flex-wrap: wrap;
+            }
+            .matchup-teams {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .matchup-team {
+                flex-shrink: 1;
+            }
+            .matchup .spread-badge {
+                margin-left: 0;
+                margin-top: 0.25rem;
+            }
         }
     </style>
 </head>
@@ -502,6 +544,21 @@
         { id: "day9", label: "Day 9 — Final Four", date: "Saturday, April 4", picksNeeded: 1, round: "F4" },
         { id: "day10", label: "Day 10 — Championship", date: "Monday, April 6", picksNeeded: 1, round: "NC" }
     ];
+
+    // Schedule: which regions play on which day (Round of 64)
+    const SCHEDULE = {
+        day1: ["East", "Midwest"],
+        day2: ["West", "South"]
+    };
+
+    function getGameDay(region) {
+        for (const [dayId, regions] of Object.entries(SCHEDULE)) {
+            if (regions.includes(region)) {
+                return DAYS.find(d => d.id === dayId);
+            }
+        }
+        return null;
+    }
 
     // Build flat team list
     function getAllTeams() {
@@ -692,9 +749,14 @@
 
         for (const [region, matchups] of Object.entries(BRACKET)) {
             const topSeed = matchups[0];
+            const dayInfo = getGameDay(region);
+            const dayDate = dayInfo ? dayInfo.date : "";
             html += `<div class="region-card">
                 <div class="region-header" onclick="toggleRegion('${region}')">
-                    <h3>${region} Region</h3>
+                    <div>
+                        <h3>${region} Region</h3>
+                        <span style="color:var(--text-dim);font-size:0.75rem">${dayDate}</span>
+                    </div>
                     <div style="display:flex;align-items:center;gap:0.5rem">
                         <span style="color:var(--accent);font-size:0.85rem">#1 ${topSeed.team}</span>
                         <span class="toggle-arrow" id="arrow-region-${region}">&#9660;</span>
@@ -709,16 +771,21 @@
                 const spreadStr = spread < 0 ? spread.toString() : "+" + spread;
                 const isClose = Math.abs(spread) <= 5;
                 const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
-                // Favorite is the higher-seeded team (lower seed number) unless spread is positive (underdog)
                 const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
                 html += `<div class="matchup">
-                    <span class="seed seed-${m.seed}">${m.seed}</span>
-                    <span class="team-name">${m.team}${m.record ? ' <span style="color:var(--text-dim);font-size:0.8rem">(' + m.record + ')</span>' : ''}</span>
-                    ${used1 ? '<span class="team-used">USED</span>' : ''}
-                    <span class="vs-label">vs</span>
-                    <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
-                    <span class="team-name">${m.vs_team}</span>
-                    ${used2 ? '<span class="team-used">USED</span>' : ''}
+                    <div class="matchup-teams">
+                        <div class="matchup-team">
+                            <span class="seed seed-${m.seed}">${m.seed}</span>
+                            <span class="team-name">${m.team}${m.record ? ' <span style="color:var(--text-dim);font-size:0.8rem">(' + m.record + ')</span>' : ''}</span>
+                            ${used1 ? '<span class="team-used">USED</span>' : ''}
+                        </div>
+                        <span class="vs-label">vs</span>
+                        <div class="matchup-team">
+                            <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
+                            <span class="team-name">${m.vs_team}</span>
+                            ${used2 ? '<span class="team-used">USED</span>' : ''}
+                        </div>
+                    </div>
                     <span class="${spreadClass}" title="Point spread">${favText}</span>
                 </div>`;
             }
@@ -734,56 +801,91 @@
         const container = document.getElementById("tab-lines");
         const usedTeams = getUsedTeams();
 
-        // Collect all matchups with region info
+        // Collect all matchups with region info and game day
         const allMatchups = [];
         for (const [region, matchups] of Object.entries(BRACKET)) {
             for (const m of matchups) {
-                allMatchups.push({ ...m, region });
+                allMatchups.push({ ...m, region, day: getGameDay(region) });
             }
         }
 
-        // Sort by absolute spread descending (biggest lines first)
-        allMatchups.sort((a, b) => Math.abs(b.spread) - Math.abs(a.spread));
-
-        let html = `<div class="region-card">
-            <div class="region-header" style="cursor:default">
-                <h3>All Matchups by Spread</h3>
-                <span style="color:var(--text-dim);font-size:0.85rem">${allMatchups.length} games</span>
-            </div>
-            <div class="region-body">`;
-
-        for (let idx = 0; idx < allMatchups.length; idx++) {
-            const m = allMatchups[idx];
-            const used1 = usedTeams.has(m.team);
-            const used2 = usedTeams.has(m.vs_team);
-            const spread = m.spread;
-            const spreadStr = spread < 0 ? spread.toString() : "+" + spread;
-            const isClose = Math.abs(spread) <= 5;
-            const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
-            const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
-
-            html += `<div class="lines-row">
-                <span class="lines-rank">${idx + 1}.</span>
-                <div class="lines-matchup">
-                    <div class="lines-team-line">
-                        <span class="seed seed-${m.seed}">${m.seed}</span>
-                        <span class="lines-team-name">${m.team}</span>
-                        ${used1 ? '<span class="team-used">USED</span>' : ''}
-                    </div>
-                    <div class="lines-team-line">
-                        <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
-                        <span class="lines-team-name">${m.vs_team}</span>
-                        ${used2 ? '<span class="team-used">USED</span>' : ''}
-                    </div>
-                </div>
-                <div class="lines-meta">
-                    <span class="${spreadClass}" title="Point spread">${favText}</span>
-                    <span class="lines-region">${m.region}</span>
-                </div>
-            </div>`;
+        // Group by day
+        const byDay = {};
+        for (const m of allMatchups) {
+            const dayId = m.day ? m.day.id : "unknown";
+            if (!byDay[dayId]) byDay[dayId] = [];
+            byDay[dayId].push(m);
         }
 
-        html += `</div></div>`;
+        // Sort each day's matchups by absolute spread descending
+        for (const dayId of Object.keys(byDay)) {
+            byDay[dayId].sort((a, b) => Math.abs(b.spread) - Math.abs(a.spread));
+        }
+
+        // Sort day keys chronologically
+        const sortedDayIds = Object.keys(byDay).sort((a, b) => {
+            const aIdx = DAYS.findIndex(d => d.id === a);
+            const bIdx = DAYS.findIndex(d => d.id === b);
+            return aIdx - bIdx;
+        });
+
+        let html = "";
+        let overallRank = 1;
+
+        for (const dayId of sortedDayIds) {
+            const dayInfo = DAYS.find(d => d.id === dayId);
+            const matchups = byDay[dayId];
+            const dayLabel = dayInfo ? dayInfo.label : "Other";
+            const dayDate = dayInfo ? dayInfo.date : "";
+
+            html += `<div class="region-card">
+                <div class="region-header" onclick="toggleLinesDay('${dayId}')">
+                    <div>
+                        <h3>${dayLabel}</h3>
+                        <span style="color:var(--text-dim);font-size:0.8rem">${dayDate}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:0.5rem">
+                        <span style="color:var(--text-dim);font-size:0.85rem">${matchups.length} games</span>
+                        <span class="toggle-arrow" id="arrow-lines-${dayId}">&#9660;</span>
+                    </div>
+                </div>
+                <div class="region-body" id="body-lines-${dayId}">`;
+
+            for (let idx = 0; idx < matchups.length; idx++) {
+                const m = matchups[idx];
+                const used1 = usedTeams.has(m.team);
+                const used2 = usedTeams.has(m.vs_team);
+                const spread = m.spread;
+                const spreadStr = spread < 0 ? spread.toString() : "+" + spread;
+                const isClose = Math.abs(spread) <= 5;
+                const spreadClass = isClose ? "spread-badge spread-close" : "spread-badge";
+                const favText = spread <= 0 ? m.team + " " + spreadStr : m.vs_team + " " + (spread > 0 ? "-" + spread : spreadStr);
+
+                html += `<div class="lines-row">
+                    <span class="lines-rank">${overallRank}.</span>
+                    <div class="lines-matchup">
+                        <div class="lines-team-line">
+                            <span class="seed seed-${m.seed}">${m.seed}</span>
+                            <span class="lines-team-name">${m.team}</span>
+                            ${used1 ? '<span class="team-used">USED</span>' : ''}
+                        </div>
+                        <div class="lines-team-line">
+                            <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
+                            <span class="lines-team-name">${m.vs_team}</span>
+                            ${used2 ? '<span class="team-used">USED</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="lines-meta">
+                        <span class="${spreadClass}" title="Point spread">${favText}</span>
+                        <span class="lines-region">${m.region}</span>
+                    </div>
+                </div>`;
+                overallRank++;
+            }
+
+            html += `</div></div>`;
+        }
+
         container.innerHTML = html;
     }
 
@@ -861,6 +963,13 @@
     function toggleRegion(region) {
         const body = document.getElementById("body-region-" + region);
         const arrow = document.getElementById("arrow-region-" + region);
+        body.classList.toggle("collapsed");
+        arrow.classList.toggle("collapsed");
+    }
+
+    function toggleLinesDay(dayId) {
+        const body = document.getElementById("body-lines-" + dayId);
+        const arrow = document.getElementById("arrow-lines-" + dayId);
         body.classList.toggle("collapsed");
         arrow.classList.toggle("collapsed");
     }
