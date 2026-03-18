@@ -259,42 +259,48 @@
 
         /* Sorted Lines */
         .lines-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 28px 1fr auto;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            gap: 0.5rem;
+            padding: 0.65rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             font-size: 0.9rem;
         }
         .lines-row:last-child { border-bottom: none; }
         .lines-rank {
-            min-width: 28px;
             color: var(--text-dim);
             font-size: 0.75rem;
             font-weight: 700;
+            text-align: right;
         }
-        .lines-teams {
-            flex: 1;
-            min-width: 150px;
+        .lines-matchup {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            min-width: 0;
+        }
+        .lines-team-line {
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 0.3rem;
+            gap: 0.4rem;
+        }
+        .lines-team-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .lines-meta {
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.2rem;
             flex-shrink: 0;
         }
         .lines-region {
             color: var(--text-dim);
             font-size: 0.7rem;
             white-space: nowrap;
-        }
-        #tab-lines .region-card {
-            overflow: visible;
         }
 
         /* Rules */
@@ -758,14 +764,17 @@
 
             html += `<div class="lines-row">
                 <span class="lines-rank">${idx + 1}.</span>
-                <div class="lines-teams">
-                    <span class="seed seed-${m.seed}">${m.seed}</span>
-                    <span>${m.team}</span>
-                    ${used1 ? '<span class="team-used">USED</span>' : ''}
-                    <span class="vs-label">vs</span>
-                    <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
-                    <span>${m.vs_team}</span>
-                    ${used2 ? '<span class="team-used">USED</span>' : ''}
+                <div class="lines-matchup">
+                    <div class="lines-team-line">
+                        <span class="seed seed-${m.seed}">${m.seed}</span>
+                        <span class="lines-team-name">${m.team}</span>
+                        ${used1 ? '<span class="team-used">USED</span>' : ''}
+                    </div>
+                    <div class="lines-team-line">
+                        <span class="seed seed-${m.vs_seed}">${m.vs_seed}</span>
+                        <span class="lines-team-name">${m.vs_team}</span>
+                        ${used2 ? '<span class="team-used">USED</span>' : ''}
+                    </div>
                 </div>
                 <div class="lines-meta">
                     <span class="${spreadClass}" title="Point spread">${favText}</span>
