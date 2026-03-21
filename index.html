@@ -532,6 +532,19 @@
         ]
     };
 
+    // Round of 32 matchups (updated after first round results)
+    const R32_GAMES = [
+        // Saturday, March 21 (Day 3) — Thursday winners
+        { seed: 1, team: "Michigan", vs_seed: 9, vs_team: "Saint Louis", spread: -12.5, day: 3, region: "Midwest", time: "12:10 PM", tv: "CBS" },
+        { seed: 3, team: "Michigan State", vs_seed: 6, vs_team: "Louisville", spread: -4.5, day: 3, region: "East", time: "2:45 PM", tv: "CBS" },
+        { seed: 1, team: "Duke", vs_seed: 9, vs_team: "TCU", spread: -11.5, day: 3, region: "East", time: "5:15 PM", tv: "CBS" },
+        { seed: 2, team: "Houston", vs_seed: 10, vs_team: "Texas A&M", spread: -10.5, day: 3, region: "South", time: "6:10 PM", tv: "TNT" },
+        { seed: 3, team: "Gonzaga", vs_seed: 11, vs_team: "Texas", spread: -6.5, day: 3, region: "West", time: "7:10 PM", tv: "TBS" },
+        { seed: 3, team: "Illinois", vs_seed: 11, vs_team: "VCU", spread: -11.5, day: 3, region: "South", time: "7:50 PM", tv: "TNT" },
+        { seed: 5, team: "Vanderbilt", vs_seed: 4, vs_team: "Nebraska", spread: -1.5, day: 3, region: "South", time: "8:45 PM", tv: "TNT" },
+        { seed: 4, team: "Arkansas", vs_seed: 12, vs_team: "High Point", spread: -11.5, day: 3, region: "West", time: "9:45 PM", tv: "TBS" }
+    ];
+
     const DAYS = [
         { id: "day1", label: "Day 1 — Round of 64", date: "Thursday, March 19", picksNeeded: 2, round: "R64" },
         { id: "day2", label: "Day 2 — Round of 64", date: "Friday, March 20", picksNeeded: 2, round: "R64" },
@@ -801,6 +814,11 @@
                 allMatchups.push({ ...m, region, dayInfo: getGameDay(m) });
             }
         }
+        // Add R32 games
+        for (const m of R32_GAMES) {
+            const dayInfo = DAYS.find(d => d.id === "day" + m.day);
+            allMatchups.push({ ...m, dayInfo });
+        }
 
         // Group by day
         const byDay = {};
@@ -831,7 +849,10 @@
             const dayLabel = dayInfo ? dayInfo.label : "Other";
             const dayDate = dayInfo ? dayInfo.date : "";
 
-            const isToday = dayId === "day2";
+            // Determine today's day based on current date
+            const todayStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            const dayObj = DAYS.find(d => d.id === dayId);
+            const isToday = dayObj && todayStr.includes(dayObj.date.split(', ').slice(1).join(', '));
             const collapsed = !isToday;
 
             html += `<div class="region-card">
