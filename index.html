@@ -554,6 +554,20 @@
         { seed: 4, team: "Alabama", vs_seed: 5, vs_team: "Texas Tech", spread: -1.5, day: 4, region: "Midwest", time: "9:45 PM", tv: "TBS" }
     ];
 
+    // Sweet 16 matchups (updated after second round results)
+    const S16_GAMES = [
+        // Thursday, March 26 (Day 5) — West & South regions
+        { seed: 2, team: "Purdue", vs_seed: 11, vs_team: "Texas", spread: -6.5, day: 5, region: "West", time: "7:10 PM", tv: "CBS" },
+        { seed: 4, team: "Nebraska", vs_seed: 9, vs_team: "Iowa", spread: -1.5, day: 5, region: "South", time: "7:30 PM", tv: "TBS" },
+        { seed: 1, team: "Arizona", vs_seed: 4, vs_team: "Arkansas", spread: -8.5, day: 5, region: "West", time: "9:45 PM", tv: "CBS" },
+        { seed: 2, team: "Houston", vs_seed: 3, vs_team: "Illinois", spread: -3.5, day: 5, region: "South", time: "10:05 PM", tv: "TBS" },
+        // Friday, March 27 (Day 6) — East & Midwest regions
+        { seed: 1, team: "Duke", vs_seed: 5, vs_team: "St. John's", spread: -6.5, day: 6, region: "East", time: "7:10 PM", tv: "CBS" },
+        { seed: 1, team: "Michigan", vs_seed: 4, vs_team: "Alabama", spread: -10.5, day: 6, region: "Midwest", time: "7:35 PM", tv: "TBS" },
+        { seed: 2, team: "UConn", vs_seed: 3, vs_team: "Michigan State", spread: -1.5, day: 6, region: "East", time: "9:45 PM", tv: "CBS" },
+        { seed: 2, team: "Iowa State", vs_seed: 6, vs_team: "Tennessee", spread: -4.5, day: 6, region: "Midwest", time: "10:10 PM", tv: "TBS" }
+    ];
+
     const DAYS = [
         { id: "day1", label: "Day 1 — Round of 64", date: "Thursday, March 19", picksNeeded: 2, round: "R64" },
         { id: "day2", label: "Day 2 — Round of 64", date: "Friday, March 20", picksNeeded: 2, round: "R64" },
@@ -825,6 +839,11 @@
         }
         // Add R32 games
         for (const m of R32_GAMES) {
+            const dayInfo = DAYS.find(d => d.id === "day" + m.day);
+            allMatchups.push({ ...m, dayInfo });
+        }
+        // Add S16 games
+        for (const m of S16_GAMES) {
             const dayInfo = DAYS.find(d => d.id === "day" + m.day);
             allMatchups.push({ ...m, dayInfo });
         }
